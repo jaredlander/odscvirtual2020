@@ -65,7 +65,7 @@ Please only follow one of these methods. Attempting more than one can lead to er
 
 This assumes you have `git` [installed](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).^[Can also be done with ssh instead of https.]
 
-Run this command in the command line or shell.
+Run this command in the command line or shell.^[Or `r sprintf("git clone git@github.com:%s/%s.git", params$repoOwner, params$repoName)` for ssh.]
 
 ```sh
 git clone `r sprintf("https://github.com/%s/%s.git", params$repoOwner, params$repoName)`
@@ -97,7 +97,7 @@ knitr::include_graphics('images/rstudio-create-project-version-control.png')
 
 Choose a folder in the `Create project as a subdirectory of` field.
 
-Paste ``r sprintf('https://github.com/%s/%s', params$repoOwner, params$repoName)``^[Or `git@github.com:nyhackr/cbs2019fall.git` for ssh.] in the `Repository URL` field.
+Paste ``r sprintf('https://github.com/%s/%s', params$repoOwner, params$repoName)``^[Or `r sprintf("git@github.com:%s/%s.git", params$repoOwner, params$repoName)` for ssh.] in the `Repository URL` field.
 
 ```{r paste-url,echo=FALSE}
 knitr::include_graphics('images/rstudio-create-project-git.png')

@@ -48,7 +48,7 @@ lead to errors.
 This assumes you have `git`
 [installed](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).\[1\]
 
-Run this command in the command line or shell.
+Run this command in the command line or shell.\[2\]
 
 ``` sh
 git clone https://github.com/jaredlander/odscvirtual2020.git
@@ -75,7 +75,7 @@ Click `Git`.
 
 Choose a folder in the `Create project as a subdirectory of` field.
 
-Paste `https://github.com/jaredlander/odscvirtual2020`\[2\] in the
+Paste `https://github.com/jaredlander/odscvirtual2020`\[3\] in the
 `Repository URL` field.
 
 <img src="images/rstudio-create-project-git.png" width="536" />
@@ -104,7 +104,7 @@ top right of RStudio (the name in the image may be different).
 
 # Finish Setup
 
-Setting up all of the needed packages\[3\] and data will be handled by
+Setting up all of the needed packages\[4\] and data will be handled by
 running the following line of code in the R console.
 
 ``` r
@@ -125,15 +125,18 @@ this project.
 If you are still having trouble setting up the project and getting
 everything installed, sign up for an
 [RStudio.cloud](https://rstudio.cloud/) account, contact the TA and ask
-for access to the class project.\[4\]
+for access to the class project.\[5\]
 
 # Footnotes
 
 1.  Can also be done with ssh instead of https.
 
-2.  Or `git@github.com:nyhackr/cbs2019fall.git` for ssh.
+2.  Or git clone <git@github.com>:jaredlander/odscvirtual2020.git for
+    ssh.
 
-3.  Linux users might need to install `libxml2-dev` and `zlib1g-dev`
+3.  Or <git@github.com>:jaredlander/odscvirtual2020.git for ssh.
 
-4.  The compute instance has limited processing and memory so
+4.  Linux users might need to install `libxml2-dev` and `zlib1g-dev`
+
+5.  The compute instance has limited processing and memory so
     performance on some topics may be suboptimal.
