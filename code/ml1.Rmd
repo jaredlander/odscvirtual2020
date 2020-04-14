@@ -136,3 +136,41 @@ plot(mod2, xvar='lambda')
 coefpath(mod2)
 ```
 
+```{r}
+mod2$lambda
+coefplot(mod2, sort='magnitude', lambda=1872)
+coefplot(mod2, sort='magnitude', lambda=657544)
+coefplot(mod2, sort='magnitude', lambda=9994)
+coefplot(mod2, sort='magnitude', lambda=3591)
+```
+
+```{r}
+mod3 <- cv.glmnet(x=train_x, y=train_y, family='gaussian', alpha=1,
+                  nfolds=5)
+coefplot(mod3, sort='magnitude', lambda='lambda.min')
+```
+
+# Ridge
+
+$$
+\hat{\beta} = argmin \left [ \sum (y_i - X_i\beta)^2 + \lambda \sum \beta_j^2 \right ]
+$$
+```{r}
+mod4 <- glmnet(x=train_x, y=train_y, family='gaussian', alpha=0)
+coefpath(mod4)
+```
+
+# Elastic Net
+
+$$
+\hat{\beta} = argmin \left [ \sum (y_i - X_i\beta)^2 + \lambda \left( \alpha \sum |\beta_j| + (1-\alpha)\frac{1}{2} \sum \beta_j^2 \right) \right ]
+$$
+
+
+```{r}
+mod5 <- glmnet(x=train_x, y=train_y, family='gaussian', alpha=0.7)
+coefpath(mod5)
+```
+
+
+
