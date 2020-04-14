@@ -172,5 +172,110 @@ mod5 <- glmnet(x=train_x, y=train_y, family='gaussian', alpha=0.7)
 coefpath(mod5)
 ```
 
+# Penalized Regression Summary
 
+- Ordinary regression with special features and interpretable
+- Shrinks coefficients toward 0 for more realistc effects
+- Performs automated variable selection
+- two hyperparameters
+    - lambda: amount of penalty
+    - alpha: type of penalty: lasso vs ridge
+
+# Trees
+
+- regression
+- classification
+
+## Packages
+
+- `{rpart}`
+- `{party}`
+- `{C5.0}`
+- `{xgboost}`
+
+## Benefits
+
+- simple trees are easy to understand
+- good predictions
+
+## Flaws
+
+- Complex trees are hard to understand
+- prone to overfitting
+
+## Improvements
+
+- Random Forests
+- Boosting
+
+gradient boosted machine
+
+# xgboost
+
+```{r}
+library(xgboost)
+trainxg <- xgb.DMatrix(data=train_x, label=train_y)
+trainxg
+```
+
+```{r}
+mod6 <- xgb.train(
+    data=trainxg,
+    nrounds=1, 
+    objective='reg:squarederror',
+    booster='gbtree' # gblinear
+)
+
+# DiagrammeR
+?xgb.train
+xgb.plot.multi.trees(mod6)
+```
+
+```{r}
+mod7 <- xgb.train(
+    data=trainxg,
+    nrounds=100, 
+    objective='reg:squarederror',
+    booster='gbtree' # gblinear
+)
+
+xgb.plot.multi.trees(mod7)
+```
+
+```{r}
+mod8 <- xgb.train(
+    data=trainxg,
+    nrounds=100, 
+    objective='reg:squarederror',
+    booster='gbtree',
+    watchlist=list(train=trainxg),
+    print_every_n=1
+)
+
+mod9 <- xgb.train(
+    data=trainxg,
+    nrounds=500, 
+    objective='reg:squarederror',
+    booster='gbtree',
+    watchlist=list(train=trainxg),
+    print_every_n=1
+)
+```
+
+```{r}
+val_x <- bake(prep1, new_data=test, all_predictors(), composition='matrix')
+val_y <- bake(prep1, new_data=test, all_outcomes(), composition='matrix')
+valxg <- xgb.DMatrix(data=val_x, label=val_y)
+```
+
+```{r}
+mod10 <- xgb.train(
+    data=trainxg,
+    nrounds=500, 
+    objective='reg:squarederror',
+    booster='gbtree',
+    watchlist=list(train=trainxg, validate=valxg),
+    print_every_n=1
+)
+```
 
