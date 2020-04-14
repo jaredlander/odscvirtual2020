@@ -73,3 +73,44 @@ library(coefplot)
 coefplot(mod1, sort='magnitude')
 ```
 
+```{r}
+# mod2 <- glmnet(formula, data)
+# mod2 <- glmnet(x_matrix, y_matrix)
+```
+
+# Recipes
+
+Standardization, normalization, centering and scaling
+
+$$
+\tilde{x} = \frac{x - \bar{x}}{sd(x)}
+$$
+
+clothing: shirt, hat, pants
+shirt*7
+
+typically, q levels in a categorical variable needs q - 1 dummy variables
+
+but in ML, we don't care, so we use q dummy variables
+
+```{r}
+library(recipes)
+
+rec1 <- recipe(SalaryCY ~ ., data=train) %>% 
+    step_rm(ID, SalaryPY, BonusPY, BonusCY) %>% 
+    step_knnimpute(all_predictors()) %>% 
+    step_normalize(all_numeric(), -SalaryCY) %>% 
+    step_other(all_nominal(), threshold=0.01) %>% 
+    step_dummy(all_nominal(), one_hot=TRUE)
+
+rec1
+
+prep1 <- prep(rec1, training=train)
+prep1
+```
+
+```{r}
+bake(prep1, new_data=train)
+bake(prep1, new_data=test)
+```
+
