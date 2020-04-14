@@ -160,4 +160,54 @@ net_spec <- linear_reg(penalty=tune(), mixture=1) %>% set_engine('glmnet')
 net_spec %>% parameters()
 ```
 
+# Evaluation Metrics
+
+- ~AIC~
+- ~BIC~
+- ~r-squared~
+- root mean squared error (rmse)
+- mean absolute error (mae)
+
+$$
+rmse = \frac{1}{n}\sqrt{\sum (y_i - \hat{y}_i)^2}
+$$
+
+$$
+mae = \frac{1}{n} \sum |y_i - \hat{y}_i|
+$$
+
+0/1
+
+FALSE/TRUE
+
+Lose/Win
+
+```{r}
+library(yardstick)
+
+
+small_results <- tibble::tibble(true=c(2, 5, 3), predicted=c(3, 4, 3))
+small_results
+
+rmse(small_results, truth=true, estimate=predicted)
+mae(small_results, truth=true, estimate=predicted)
+
+the_metrics <- metric_set(rmse, mae)
+the_metrics
+the_metrics(small_results, truth=true, estimate=predicted)
+```
+
+```{r}
+glm_spec <- linear_reg(penalty=6437) %>% set_engine('glmnet')
+mod2 <- glm_spec %>% fit(SalaryCY ~ Title + Reports, data=train)
+preds2 <- predict(mod2, new_data=test)
+preds2
+preds2 %>% class
+
+library(dplyr)
+test %>% 
+    select(SalaryCY) %>% 
+    bind_cols(preds2) %>% 
+    the_metrics(truth=SalaryCY, estimate=.pred)
+```
 
