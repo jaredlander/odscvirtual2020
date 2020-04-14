@@ -341,7 +341,18 @@ mod5
 
 ```{r}
 undebug(workflows:::predict.workflow)
-preds5 <- predict(mod5, new_data=test)
+# preds5 <- predict(mod5, new_data=test)
+
+# don't do this
+preds5 <- predict(
+    mod5$fit$fit$fit,
+    newx=rec1 %>% 
+        finalize_recipe(best_params) %>% 
+        prep(training=train) %>% 
+        bake(new_data=test, all_predictors(), composition='matrix'),
+    s=10^(best_params$penalty)
+)
+head(preds5)
 
 test %>% 
     select(SalaryCY) %>% 
@@ -349,5 +360,28 @@ test %>%
     the_metrics(truth=SalaryCY, estimate=.preds)
 ```
 
+# Fit on all Data
+
+```{r}
+mod_final <- flow_final %>% 
+    fit(comps)
+```
+
+# More Ways to Tune
+
+```{r}
+tune6 <- tune_bayes(
+    flow4,
+    resamples=the_cv,
+    iter=25,
+    metrics=the_metrics,
+    param_info=params4,
+    control=control_bayes(verbose=TRUE, uncertain=5, time_limit=5),
+    initial=4
+)
+
+tune4 %>% show_best(metric='mae')
+tune6 %>% show_best(metric='mae')
+```
 
 
