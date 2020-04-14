@@ -99,6 +99,7 @@ library(recipes)
 rec1 <- recipe(SalaryCY ~ ., data=train) %>% 
     step_rm(ID, SalaryPY, BonusPY, BonusCY) %>% 
     step_knnimpute(all_predictors()) %>% 
+    step_nzv(all_predictors()) %>% 
     step_normalize(all_numeric(), -SalaryCY) %>% 
     step_other(all_nominal(), threshold=0.01) %>% 
     step_dummy(all_nominal(), one_hot=TRUE)
@@ -112,5 +113,20 @@ prep1
 ```{r}
 bake(prep1, new_data=train)
 bake(prep1, new_data=test)
+```
+
+```{r}
+train_x <- bake(prep1, 
+                new_data=train, all_predictors(), composition='matrix')
+head(train_x)
+train_y <- bake(prep1, 
+                new_data=train, all_outcomes(), composition='matrix')
+head(train_y)
+```
+
+# Back to Lasso
+
+```{r}
+mod2 <- glmnet(x=train_x, y=train_y
 ```
 
