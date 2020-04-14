@@ -278,5 +278,27 @@ params4 <- flow4 %>%
 
 ```
 
+# Search Grid
+
+```{r}
+grid4 <- grid_random(params4, size=20)
+grid4
+```
+
+# Tuning
+
+```{r}
+tune4 <- tune_grid(
+    flow4,
+    resamples=the_cv,
+    grid=grid4,
+    metrics=the_metrics,
+    control=control_grid(verbose=TRUE, allow_par=TRUE)
+)
+```
+
+
+
+
 
 
