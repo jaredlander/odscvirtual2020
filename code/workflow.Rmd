@@ -225,4 +225,58 @@ trees()
 tree_depth()
 ```
 
-# 
+# Workflows
+
+```{r}
+rec2 <- recipe(SalaryCY ~ ., data=train) %>% 
+    step_rm(ID, SalaryPY, BonusPY, BonusCY) %>% 
+    step_nzv(all_predictors()) %>% 
+    step_knnimpute(all_predictors()) %>% 
+    step_naomit(all_outcomes()) %>% 
+    step_BoxCox(Floor) %>% 
+    step_bs(Years, deg_free=5) %>% 
+    step_normalize(all_numeric(), -SalaryCY) %>% 
+    step_upsample(Title, over_ratio=0.5) %>% 
+    step_other(all_nominal()) %>% 
+    step_dummy(all_nominal(), one_hot=TRUE)
+```
+
+
+```{r}
+library(workflows)
+
+flow_test <- workflow() %>% 
+    add_recipe(rec2) %>% 
+    add_model(glm_spec)
+flow_test
+
+mod3 <- flow_test %>% fit(train)
+mod3 %>% class
+mod3$fit$fit$fit %>% coefpath()
+
+# preds3 <- predict(mod3, new_data=test)
+```
+
+```{r}
+flow4 <- workflow() %>% 
+    add_recipe(rec1) %>% 
+    add_model(net_spec)
+flow4
+
+# gives error
+# mod4 <- flow4 %>% fit(train)
+```
+
+```{r}
+flow4 %>% parameters()
+
+params4 <- flow4 %>% 
+    parameters() %>% 
+    update(
+        deg_free=deg_free(range=c(3, 6))
+    )
+
+```
+
+
+
