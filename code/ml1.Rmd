@@ -305,4 +305,20 @@ xgb.importance(model=mod11) %>%
     xgb.plot.importance()
 ```
 
+# Predictions
+
+## glmnet
+
+```{r}
+preds5 <- predict(mod5, newx=val_x, s=6534)
+head(preds5)
+```
+
+```{r}
+preds11 <- predict(mod11, newdata=val_x)
+head(preds11)
+
+preds11.a <- predict(mod11, newdata=val_x, ntreelimit=76)
+head(preds11.a)
+```
 
