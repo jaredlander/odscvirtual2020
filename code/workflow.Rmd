@@ -81,7 +81,83 @@ rec1
 
 rec1 %>% parameters()
 
-prep(rec1, training=train)
+# won't work because of tuning parameter
+# prep(rec1, training=train)
+```
+
+# Model Specification
+
+```{r eval=FALSE}
+lm(formula=y ~ x, data=data)
+glm(formula=y ~ x, data=data)
+glmnet(x=x_matrix, y=y_matrix)
+xgb.train(data=xgb.DMatrix(data=x_matrix, label=y_matrix))
+```
+
+1. type of model
+1. computation engine
+1. fitting the model
+
+```{r}
+library(parsnip)
+
+linear_reg()
+logistic_reg()
+
+decision_tree()
+decision_tree(mode='regression')
+decision_tree(mode='classification')
+
+rand_forest()
+
+boost_tree(mode='regression')
+```
+
+```{r}
+linear_reg() %>% set_engine('lm')
+linear_reg() %>% set_engine('glmnet')
+linear_reg() %>% set_engine('stan')
+linear_reg() %>% set_engine('keras')
+linear_reg() %>% set_engine('spark')
+```
+
+```{r}
+lm_spec <- linear_reg() %>% set_engine('lm')
+
+mod1 <- lm_spec %>% fit(SalaryCY ~ Years + Title, data=train)
+mod1
+mod1 %>% class
+
+net_spec <- linear_reg() %>% set_engine('glmnet')
+mod2 <- net_spec %>% fit(SalaryCY ~ Years + Title, data=train)
+mod2 %>% class
+library(coefplot)
+mod2$fit %>% coefpath()
+```
+
+
+```{r}
+lm_spec %>% fit(SalaryCY ~ Years + Title, data=train)
+net_spec %>% fit(SalaryCY ~ Years + Title, data=train)
+```
+
+```{r eval=FALSE}
+# won't work because of tuning parameter
+net_spec %>% 
+    fit(
+        SalaryCY ~ ., 
+        data=rec1 %>% prep(training=train) %>% bake(newdata=train)
+    )
+```
+
+
+```{r}
+linear_reg(penalty=6537, mixture=1) %>% set_engine('glmnet')
+
+boost_tree(trees=100)
+
+net_spec <- linear_reg(penalty=tune(), mixture=1) %>% set_engine('glmnet')
+net_spec %>% parameters()
 ```
 
 
