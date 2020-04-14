@@ -1,0 +1,22 @@
+---
+title: ML in R
+date: April 14, 2020
+output:
+    html_document:
+        toc: true
+---
+
+# Data
+
+```{r}
+uk <- readr::read_csv(here::here('data', 'Comp_UK.csv'))
+uk
+```
+
+```{r}
+library(magrittr)
+comps <- dir(here::here('data'), pattern='^Comp_', full.names=TRUE) %>% 
+    purrr::map_df(readr::read_csv)
+comps
+```
+
