@@ -330,6 +330,24 @@ flow_final <- flow4 %>%
 flow_final
 ```
 
+# Evaluate Our Flow
+
+```{r}
+mod5 <- flow_final %>% 
+    fit(train)
+mod5$fit$fit$fit$lambda
+mod5
+```
+
+```{r}
+undebug(workflows:::predict.workflow)
+preds5 <- predict(mod5, new_data=test)
+
+test %>% 
+    select(SalaryCY) %>% 
+    bind_cols(preds5) %>% 
+    the_metrics(truth=SalaryCY, estimate=.preds)
+```
 
 
 
