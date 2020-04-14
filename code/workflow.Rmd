@@ -1,0 +1,63 @@
+---
+title: ML Workflows in R
+date: April 14, 2020
+author: Jared P. Lander
+output:
+    html_document:
+        toc: true
+---
+
+# Workflow
+
+1. Read in the data
+1. Spit the data
+    - train
+    - test
+1. Resampling
+    - cross-validation
+    - bootstrap
+1. Feature Engineering
+1. Model Specification
+1. Define Evaluation Metrics
+1. Select Best Model
+1. Fit a final model
+1. Make Predictions
+
+# Read the Data
+
+```{r}
+library(magrittr)
+comps <- dir(here::here('data'), pattern='^Comp_', full.names=TRUE) %>% 
+    purrr::map_df(readr::read_csv)
+comps
+```
+
+# Split the Data
+
+```{r}
+library(rsample)
+comp_split <- initial_split(comps, prop=0.8, strata='SalaryCY')
+comp_split
+train <- training(comp_split)
+test <- testing(comp_split)
+```
+
+# Resampling
+
+```{r}
+the_cv <- vfold_cv(data=train, v=4, repeats=2, strata='SalaryCY')
+the_cv
+the_cv$splits[[1]]
+the_cv$splits[[1]]
+```
+
+```{r}
+lm(SalaryCY ~ Years + Title, data=the_cv$splits[[1]] %>% training())
+lm(SalaryCY ~ Years + Title, data=the_cv$splits[[2]] %>% training())
+lm(SalaryCY ~ Years + Title, data=the_cv$splits[[3]] %>% training())
+```
+
+
+
+
+
