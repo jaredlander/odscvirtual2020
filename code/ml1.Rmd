@@ -93,6 +93,10 @@ typically, q levels in a categorical variable needs q - 1 dummy variables
 
 but in ML, we don't care, so we use q dummy variables
 
+colors: blue, blue, blue, red, green, blue, green, green, red, red, blue, violet, blue, red, green, yellow, blue, pink, violet, blue, red, green
+
+colors: blue, blue, blue, red, green, blue, green, green, red, red, blue, other, blue, red, green, other, blue, other, other, blue, red, green
+
 ```{r}
 library(recipes)
 
@@ -127,6 +131,8 @@ head(train_y)
 # Back to Lasso
 
 ```{r}
-mod2 <- glmnet(x=train_x, y=train_y
+mod2 <- glmnet(x=train_x, y=train_y, family='gaussian', alpha=1)
+plot(mod2, xvar='lambda')
+coefpath(mod2)
 ```
 
