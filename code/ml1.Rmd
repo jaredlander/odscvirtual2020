@@ -277,5 +277,32 @@ mod10 <- xgb.train(
     watchlist=list(train=trainxg, validate=valxg),
     print_every_n=1
 )
+
+library(dygraphs)
+dygraph(mod10$evaluation_log)
 ```
+
+```{r}
+mod11 <- xgb.train(
+    data=trainxg,
+    nrounds=500, 
+    objective='reg:squarederror',
+    booster='gbtree',
+    watchlist=list(train=trainxg, validate=valxg),
+    print_every_n=1,
+    max_depth=3
+)
+
+dygraph(mod11$evaluation_log)
+
+mod10$evaluation_log[validate_rmse == min(validate_rmse), ]
+mod11$evaluation_log[validate_rmse == min(validate_rmse), ]
+```
+
+```{r}
+xgb.importance(model=mod11) %>% 
+    .[1:10, ] %>% 
+    xgb.plot.importance()
+```
+
 
