@@ -57,7 +57,31 @@ lm(SalaryCY ~ Years + Title, data=the_cv$splits[[2]] %>% training())
 lm(SalaryCY ~ Years + Title, data=the_cv$splits[[3]] %>% training())
 ```
 
+# Feature Engineering
 
+```{r}
+library(recipes)
+library(tune)
 
+train$Title %>% table()
+
+rec1 <- recipe(SalaryCY ~ ., data=train) %>% 
+    step_rm(ID, SalaryPY, BonusPY, BonusCY) %>% 
+    step_nzv(all_predictors()) %>% 
+    step_knnimpute(all_predictors()) %>% 
+    step_naomit(all_outcomes()) %>% 
+    step_BoxCox(Floor) %>% 
+    step_bs(Years, deg_free=tune()) %>% 
+    step_normalize(all_numeric(), -SalaryCY) %>% 
+    step_upsample(Title, over_ratio=0.5) %>% 
+    step_other(all_nominal()) %>% 
+    step_dummy(all_nominal(), one_hot=TRUE)
+
+rec1
+
+rec1 %>% parameters()
+
+prep(rec1, training=train)
+```
 
 
