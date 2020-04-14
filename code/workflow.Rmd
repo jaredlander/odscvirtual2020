@@ -297,7 +297,38 @@ tune4 <- tune_grid(
 )
 ```
 
+```{r}
+tune4
+tune4$.notes[[2]]
+tune4$.metrics[[1]]
+tune4$.metrics[[2]]
 
+tune4 %>% autoplot()
+
+tune4 %>% collect_metrics() %>% 
+    filter(.metric=='mae') %>% 
+    arrange(mean)
+
+tune4 %>% autoplot()
+tune4 %>% autoplot(metric='mae')
+
+tune4 %>% show_best(metric='mae')
+
+tune4 %>% select_best(metric='mae')
+tune4 %>% select_by_one_std_err(metric='mae', penalty, deg_free)
+
+best_params <- tune4 %>% select_by_one_std_err(metric='mae', penalty, deg_free)
+best_params
+```
+
+# Finalize Model
+
+```{r}
+flow_final <- flow4 %>% 
+    finalize_workflow(best_params)
+
+flow_final
+```
 
 
 
