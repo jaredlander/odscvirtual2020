@@ -211,3 +211,18 @@ test %>%
     the_metrics(truth=SalaryCY, estimate=.pred)
 ```
 
+# Hyperparameters
+
+```{r}
+rec1 %>% parameters()
+net_spec %>% parameters()
+
+library(dials)
+deg_free()
+penalty()
+
+trees()
+tree_depth()
+```
+
+# 
