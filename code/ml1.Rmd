@@ -20,3 +20,56 @@ comps <- dir(here::here('data'), pattern='^Comp_', full.names=TRUE) %>%
 comps
 ```
 
+# EDA
+
+```{r}
+library(ggplot2)
+ggplot(comps, aes(x=SalaryCY)) + geom_histogram()
+ggplot(comps, aes(x=SalaryCY, fill=Title)) + geom_histogram()
+```
+
+# Split the Data
+
+```{r}
+library(rsample)
+comp_split <- initial_split(comps, prop=0.8, strata='SalaryCY')
+comp_split
+train <- training(comp_split)
+test <- testing(comp_split)
+```
+
+# Terminology
+
+- Outputs: y, response, target, label, ~depedent variable~
+- Inputs: x, covartiate, feature, predictor, ~independent variable~
+- Intercept/Bias
+- Coefficients/Weights
+- Inference/<NA>
+- Prediction/Inference
+
+# Lasso
+
+$$
+y \sim a + b_1x_1 + b_2x_2 + \cdots + b_px_p + \epsilon \\
+\epsilon \sim N(0, \sigma)
+$$
+
+$$
+\hat{\beta} = argmin \left [ \sum (y_i - X_i\beta)^2 + \lambda \sum |\beta_j| \right ]
+$$
+
+```{r}
+library(glmnet)
+?glmnet
+```
+
+```{r}
+names(train)
+mod1 <- lm(
+    SalaryCY ~ . - ID - SalaryPY - BonusCY - BonusPY, data=train
+)
+mod1
+library(coefplot)
+coefplot(mod1, sort='magnitude')
+```
+
